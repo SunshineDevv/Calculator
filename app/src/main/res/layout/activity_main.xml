@@ -20,6 +20,21 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.011" />
 
+    <TextView
+        android:id="@+id/editText"
+        android:layout_width="376dp"
+        android:layout_height="139dp"
+        android:text="0"
+        android:textSize="45sp"
+        android:textColor="@color/white"
+        android:gravity="center|right"
+        app:layout_constraintBottom_toBottomOf="@+id/view"
+        app:layout_constraintEnd_toEndOf="@+id/view"
+        app:layout_constraintHorizontal_bias="0.586"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/view"
+        app:layout_constraintVertical_bias="0.431" />
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_0"
         android:layout_width="80dp"
