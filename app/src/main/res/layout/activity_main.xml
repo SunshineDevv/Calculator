@@ -25,11 +25,11 @@
         android:id="@+id/editText"
         android:layout_width="match_parent"
         android:layout_height="86sp"
-        android:gravity="center|right"
+        android:gravity="center|right|top"
         android:text="0"
         android:layout_marginHorizontal="20dp"
         android:textColor="@color/white"
-        android:textSize="45sp"
+        android:textSize="35sp"
         app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintEnd_toEndOf="@+id/view"
         app:layout_constraintHorizontal_bias="0.647"
@@ -155,12 +155,12 @@
         app:layout_constraintVertical_bias="0.449" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button_14"
+        android:id="@+id/buttonExponentation"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:background="@drawable/shape_circle"
         android:backgroundTint="#656E4C"
-        android:text="(  )"
+        android:text="^"
         android:textColor="@color/white"
         android:textSize="40sp"
         android:textStyle="bold"
@@ -395,12 +395,12 @@
         app:layout_constraintVertical_bias="0.845" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/buttonFactorial"
+        android:id="@+id/buttonRight"
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:background="@drawable/shape_circle"
         android:backgroundTint="#2D3024"
-        android:text="!"
+        android:text=")"
         android:textColor="@color/white"
         android:textSize="35sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -411,12 +411,12 @@
         app:layout_constraintVertical_bias="0.323" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/buttonExponentation"
+        android:id="@+id/buttonLeft"
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:background="@drawable/shape_circle"
         android:backgroundTint="#2D3024"
-        android:text="^"
+        android:text="("
         android:textColor="@color/white"
         android:textSize="35sp"
         app:layout_constraintBottom_toBottomOf="parent"
