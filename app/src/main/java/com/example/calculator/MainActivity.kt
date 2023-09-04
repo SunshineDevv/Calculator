@@ -2,6 +2,7 @@ package com.example.calculator
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import androidx.core.text.isDigitsOnly
 import com.example.calculator.databinding.ActivityMainBinding
@@ -36,26 +37,65 @@ class MainActivity : AppCompatActivity() {
         binding.buttonSubtraction.setOnClickListener { setTextView("-") }
         binding.buttonMultiplication.setOnClickListener { setTextView("*") }
         binding.buttonSolve.setOnClickListener { setTextView("=")
-            solveOperation()}
+            solveOperation() }
         binding.buttonPercent.setOnClickListener { setTextView("%") }
         binding.buttonExponentation.setOnClickListener { setTextView("^") }
-        binding.buttonSquareRoot.setOnClickListener { setNumberOnView("sqrt(") }
-        binding.buttonLeft.setOnClickListener { setNumberOnView("(") }
-        binding.buttonRight.setOnClickListener { setTextView(")") }
+        binding.buttonSquareRoot.setOnClickListener { setSquareOnView("sqrt(") }
+        binding.buttonLeft.setOnClickListener { setScopeOnView("(") }
+        binding.buttonRight.setOnClickListener { setScopeOnView(")") }
+        binding.editText.movementMethod = ScrollingMovementMethod()
+        binding.solvedOperationText.movementMethod = ScrollingMovementMethod()
     }
 
+    private fun setSquareOnView(str: String){
+        when{
+            binding.editText.text.takeLast(1).toString() == "=" -> {
+                binding.editText.text = str
+                binding.solvedOperationText.text = ""
+            }
+            binding.editText.text.length == 1 && binding.editText.text.toString() == "0" ->  binding.editText.text = str
+            binding.editText.text.takeLast(1).toString() == ")" && binding.buttonSquareRoot.isPressed -> binding.editText.append("*sqrt(")
+            binding.editText.text.takeLast(1).isDigitsOnly() && binding.buttonSquareRoot.isPressed -> binding.editText.append("*sqrt(")
+            binding.editText.text.toString().takeLast(1).contains(arrayOfSigns) -> binding.editText.append(str)
+        }
+    }
+
+    private fun setScopeOnView(str: String){
+        when{
+            binding.editText.text.takeLast(1).toString() == "=" -> {
+                binding.editText.text = str
+                binding.solvedOperationText.text = ""
+            }
+            binding.editText.text.length == 1 && binding.buttonLeft.isPressed -> {
+                val temp = binding.editText.text.toString()
+                binding.editText.text = "($temp"
+            }
+            binding.editText.text.length == 1 && binding.buttonRight.isPressed -> binding.buttonRight.isPressed = false
+            binding.editText.text.takeLast(1).isDigitsOnly() && binding.buttonLeft.isPressed -> binding.editText.append("*(")
+            binding.editText.text.takeLast(1).toString() == ")" && binding.buttonLeft.isPressed -> binding.editText.append("*(")
+            binding.editText.text.takeLast(1).toString() == "(" && binding.buttonRight.isPressed -> {
+                val temp = binding.editText.text.toString()
+                binding.editText.text = "${temp}0)"
+            }
+            binding.editText.text.toString().takeLast(1).contains(arrayOfSigns) -> binding.editText.append(str)
+        }
+    }
     private fun setNumberOnView(str: String){
-        if (binding.editText.text.length == 1 && binding.editText.text.toString() == "0"){
-            binding.editText.text = str
-        }else{
-            binding.editText.append(str)
+        when{
+            binding.editText.text.length == 1 && binding.editText.text.toString() == "0" -> binding.editText.text = str
+            binding.editText.text.takeLast(1).toString() == "=" -> {
+                binding.editText.text = str
+                binding.solvedOperationText.text = ""
+            }
+        else -> binding.editText.append(str)
         }
     }
 
     private fun setTextView(str: String){
-
         when{
-            binding.editText.text.isNotEmpty() && binding.editText.text.takeLast(1).isDigitsOnly() || binding.editText.text.takeLast(1).toString() == ")"
+            binding.editText.text.isNotEmpty() && binding.editText.text.takeLast(1).isDigitsOnly()
+                    || binding.editText.text.takeLast(1).toString() == ")"
+                    || binding.editText.text.takeLast(1).toString() == "("
                     && binding.editText.text.toString() != "0" -> binding.editText.append(str)
             binding.editText.text.length == 1 -> binding.editText.append(str)
             binding.editText.text.takeLast(1).toString().contains(arrayOfSigns) -> {
@@ -64,6 +104,10 @@ class MainActivity : AppCompatActivity() {
                 val newExpression = operator.replace(operator,str)
                 expression = expression.substring(0,expression.length-1)
                 binding.editText.text = "$expression$newExpression"
+            }
+            binding.editText.text.takeLast(1).toString() == "=" -> {
+                binding.editText.text = str
+                binding.solvedOperationText.text = ""
             }
             else -> binding.editText.text = "0"
         }
@@ -88,11 +132,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun solveOperation() {
-        var expression: String =
+        val expression: String =
             binding.editText.text.toString().substring(0, binding.editText.text.length - 1)
-        val exp = ExpressionBuilder(expression).build()
-        val result = exp.evaluate()
-        binding.solvedOperationText.text = result.toString()
+        var result: Any = 0
+        try {
+            val exp = ExpressionBuilder(expression).build()
+            result = exp.evaluate()
+
+            val resultLong = result.toLong()
+            if(result == resultLong.toDouble())
+                binding.solvedOperationText.text = resultLong.toString()
+            else
+                binding.solvedOperationText.text = result.toString()
+        }catch (e:Exception){
+            binding.solvedOperationText.text = "Error expression!"
+        }
     }
 
     private fun String.contains(arrayOfSigns: ArrayList<String>): Boolean {
